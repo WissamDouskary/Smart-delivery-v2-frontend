@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
-import { Login } from './pages/login/login';
-import { RoleGuard } from './Auth/RoleGuard';
-import { Unauthorized } from './pages/unauthorized/unauthorized';
-import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
-import { AuthGuard } from './Auth/AuthGuard';
+import { Home } from './pages/home/home.page';
+import { Login } from './features/auth/pages/login/login.page';
+import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
+import { AuthGuard } from './core/guards/auth.guard';
+import { RoleGuard } from './core/guards/role.guard';
+import { NotFound } from './pages/not-found/not-found.page';
 
 export const routes: Routes = [
   {
@@ -13,17 +13,22 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'login',
+    path: 'auth/login',
     component: Login,
-  },
-  {
-    path: 'admin-dashboard',
-    component: AdminDashboard,
-    canActivate: [AuthGuard, RoleGuard],
-    data: { role: 'Manager' },
   },
   {
     path: 'unauthorized',
     component: Unauthorized,
+  },
+  {
+    path: 'admin/dashboard',
+    loadComponent: () =>
+      import('./features/admin/dashboard/admin-dashboard').then(m => m.AdminDashboard),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { role: 'Manager' },
+  },
+  {
+    path: '**',
+    component: NotFound,
   },
 ];
