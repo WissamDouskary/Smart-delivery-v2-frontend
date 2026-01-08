@@ -1,0 +1,150 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-2xl w-full">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl shadow-xl mb-4 transform hover:rotate-6 transition-transform duration-300">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Create your account</h2>
+      <p class="mt-2 text-base text-gray-600">Join SmartLogi and start managing your deliveries today</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white/80 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+      <!-- Loading Overlay -->
+      <div *ngIf="Loading" class="absolute inset-0 z-50 bg-white/60 backdrop-blur-sm flex items-center justify-center transition-all">
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <p class="mt-4 text-blue-700 font-bold animate-pulse">Creating your account...</p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="register()" #RegisterForm="ngForm" class="space-y-6">
+        <!-- Name Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700 ml-1" for="nom">Nom</label>
+            <input
+              type="text"
+              id="nom"
+              name="nom"
+              [(ngModel)]="Nom"
+              required
+              placeholder="Doe"
+              class="block w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+              #nomCtrl="ngModel"
+            />
+            <p class="text-xs text-red-500 mt-1 ml-1" *ngIf="nomCtrl.invalid && nomCtrl.touched">Nom is required</p>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700 ml-1" for="prenom">Prenom</label>
+            <input
+              type="text"
+              id="prenom"
+              name="prenom"
+              [(ngModel)]="Prenom"
+              required
+              placeholder="John"
+              class="block w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+              #prenomCtrl="ngModel"
+            />
+            <p class="text-xs text-red-500 mt-1 ml-1" *ngIf="prenomCtrl.invalid && prenomCtrl.touched">Prenom is required</p>
+          </div>
+        </div>
+
+        <!-- Contact Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700 ml-1" for="telephone">Telephone</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 text-sm font-medium">+212</span>
+              <input
+                type="number"
+                id="telephone"
+                name="telephone"
+                [(ngModel)]="Telephone"
+                required
+                placeholder="6XX-XXXXXX"
+                class="block w-full pl-14 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                #telephoneCtrl="ngModel"
+              />
+            </div>
+            <p class="text-xs text-red-500 mt-1 ml-1" *ngIf="telephoneCtrl.invalid && telephoneCtrl.touched">Phone number is required</p>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700 ml-1" for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="Email"
+              required
+              email
+              placeholder="john@example.com"
+              class="block w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+              #emailCtrl="ngModel"
+            />
+            <p class="text-xs text-red-500 mt-1 ml-1" *ngIf="emailCtrl.invalid && emailCtrl.touched">Please enter a valid email</p>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-gray-700 ml-1" for="adress">Address</label>
+          <input
+            type="text"
+            id="adress"
+            name="adress"
+            [(ngModel)]="Adress"
+            required
+            placeholder="123 Street, City, Country"
+            class="block w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+            #adressCtrl="ngModel"
+          />
+          <p class="text-xs text-red-500 mt-1 ml-1" *ngIf="adressCtrl.invalid && adressCtrl.touched">Address is required</p>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-gray-700 ml-1" for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="Password"
+            required
+            placeholder="Min. 8 characters"
+            class="block w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+            #passwordCtrl="ngModel"
+          />
+          <div class="flex gap-1 mt-1.5 px-1">
+             <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+             <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+             <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+             <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+          </div>
+          <p class="text-xs text-red-500 mt-1 ml-1" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">Password is required</p>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-lg hover:shadow-blue-500/25 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.01]"
+          [disabled]="RegisterForm.invalid || Loading"
+        >
+          Create Account
+        </button>
+
+        <!-- Login Link -->
+        <p class="text-center text-sm text-gray-600">
+          Already have an account? 
+          <a routerLink="/auth/login" class="font-bold text-blue-600 hover:text-blue-700 transition-colors">Sign in here</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

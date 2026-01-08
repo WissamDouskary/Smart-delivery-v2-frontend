@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   imports: [],
   standalone: true,
   templateUrl: './admin-dashboard.html',
-  styleUrl: './admin-dashboard.css',
+  styleUrls: ['./admin-dashboard.css']
 })
 export class AdminDashboard {
 
