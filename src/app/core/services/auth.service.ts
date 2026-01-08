@@ -1,25 +1,31 @@
-import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { environment } from '../../environments/environment.prod';
-import { map, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { jwtService } from './JwtService';
+import { tap } from 'rxjs';
+import { jwtService } from './jwt.service';
+import { AuthApi } from '../../features/auth/auth.api';
+import { Sender } from '../../features/auth/models/sender.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
   constructor(
-    private http: HttpClient,
+    private authApi: AuthApi,
     @Inject(PLATFORM_ID) private platformId: Object,
     private jwtSer: jwtService
   ) {}
 
-  login(body: { email: String; password: String }) {
-    return this.http
-      .post<{ token: string; userRole: string }>(`${environment.apiUrl}/api/auth/login`, body)
+  register(body: Sender) {
+    return this.authApi.register(body);
+  }
+
+  login(body: { email: string; password: string }) {
+    return this.authApi
+      .login(body)
       .pipe(
-        tap((res) => {
+        tap(res => {
+          if (!this.isBrowser()) return;
           localStorage.setItem('jwtToken', res.token);
           localStorage.setItem('userRole', res.userRole);
         })
@@ -32,10 +38,6 @@ export class AuthService {
     localStorage.removeItem('userRole');
   }
 
-  private isBrowser(): boolean {
-    return isPlatformBrowser(this.platformId);
-  }
-
   getToken(): string | null {
     if (!this.isBrowser()) return null;
     return localStorage.getItem('jwtToken');
@@ -46,13 +48,22 @@ export class AuthService {
     if (!token) return false;
 
     const decoded = this.jwtSer.decodeToken(token);
-    if (!decoded || decoded.exp * 1000 < Date.now()) return false;
-
-    return true;
+    return !!decoded && decoded.exp * 1000 > Date.now();
   }
 
   getUserRole(): string | null {
     if (!this.isBrowser()) return null;
     return this.jwtSer.getRole();
+  }
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
+  hasRole(role: string): boolean {
+    if(this.jwtSer.getRole() == role){
+      return true;
+    }
+    return false;
   }
 }

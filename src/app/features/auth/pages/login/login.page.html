@@ -12,9 +12,15 @@
           name="email"
           [(ngModel)]="email"
           required
+          email
           placeholder="you@example.com"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+          #emailCtrl="ngModel"
         />
+
+        <p class="mt-2 font-bold text-red-400" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+          Email required
+        </p>
       </div>
 
       <!-- Password -->
@@ -28,13 +34,19 @@
           required
           placeholder="********"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+          #passwordCtrl="ngModel"
         />
+
+        <p class="mt-2 font-bold text-red-400" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
+          Password required
+        </p>
       </div>
 
       <!-- Login Button -->
       <button
         type="submit"
-        class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600 transition-colors"
+        class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
+        [disabled]="loginForm.invalid"
       >
         Login
       </button>

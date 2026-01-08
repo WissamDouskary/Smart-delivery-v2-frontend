@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth-service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,8 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   selector: 'app-login',
   imports: [FormsModule, CommonModule],
   standalone: true,
-  templateUrl: './login.html',
-  styleUrls: ['./login.css'],
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.css'],
 })
 export class Login{
   email: string = '';
@@ -33,7 +33,7 @@ export class Login{
             duration: 3000,
           });
           if (response.userRole == 'Manager') {
-            this.router.navigate(['/admin-dashboard']);
+            this.router.navigate(['/admin/dashboard']);
           } else if (response.userRole == 'Sender') {
             this.router.navigate(['/']);
           }
@@ -54,7 +54,7 @@ export class Login{
   }
 
   ngOnInit() {
-    if (this.authService.getToken()) {
+    if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
   }

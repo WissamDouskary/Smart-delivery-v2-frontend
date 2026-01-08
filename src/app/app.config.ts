@@ -5,7 +5,8 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { HttpClient, httpResource, provideHttpClient, withFetch } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './Auth/AuthInterceptor';
+import { AUTH_PROVIDERS } from './features/auth/auth.providers';
+import { CORE_PROVIDERS } from './core/core.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,10 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
+    AUTH_PROVIDERS,
+    CORE_PROVIDERS
   ],
 };
