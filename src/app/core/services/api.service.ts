@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 export class ApiService {
 
   private http = inject(HttpClient);
-  private BASE_URL = 'http://localhost:8080/api';
+  private BASE_URL = environment.apiUrl;
 
   get<T>(url: string, params?: any): Observable<T> {
     return this.http

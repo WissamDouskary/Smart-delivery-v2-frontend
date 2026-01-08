@@ -1,9 +1,11 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { tap } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
 import { jwtService } from './jwt.service';
 import { AuthApi } from '../../features/auth/auth.api';
 import { Sender } from '../../features/auth/models/sender.model';
+import { authRequest } from '../../features/auth/models/login/login-request.model';
+import { authResponse } from '../../features/auth/models/login/login-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,14 +22,17 @@ export class AuthService {
     return this.authApi.register(body);
   }
 
-  login(body: { email: string; password: string }) {
+  login(body: authRequest) {
     return this.authApi
       .login(body)
       .pipe(
-        tap(res => {
+        tap((res: authResponse) => {
           if (!this.isBrowser()) return;
           localStorage.setItem('jwtToken', res.token);
           localStorage.setItem('userRole', res.userRole);
+        }),
+        catchError(err => {
+          return throwError(() => err)
         })
       );
   }
