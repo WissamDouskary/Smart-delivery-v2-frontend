@@ -1,6 +1,8 @@
 import { inject } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
 import { Sender } from './models/sender.model';
+import { authRequest } from './models/login/login-request.model';
+import { authResponse } from './models/login/login-response.model';
 
 export class AuthApi {
 
@@ -10,8 +12,8 @@ export class AuthApi {
     return this.api.post<Sender>('auth/register', body);
   }
 
-  login(body: { email: string; password: string }) {
-    return this.api.post<{ token: string; userRole: string }>(
+  login(body: authRequest) {
+    return this.api.post<authResponse>(
       'auth/login',
       body
     );
