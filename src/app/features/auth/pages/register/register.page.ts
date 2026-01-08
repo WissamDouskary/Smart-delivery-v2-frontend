@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Sender } from '../../models/sender.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize, timeout } from 'rxjs';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +13,7 @@ import { finalize, timeout } from 'rxjs';
   templateUrl: './register.page.html',
   styleUrl: './register.page.css',
 })
-export class Register implements OnInit{
+export class Register implements OnInit {
   Nom: string = '';
   Prenom: string = '';
   Telephone: number = 0;
@@ -26,8 +26,8 @@ export class Register implements OnInit{
   constructor(
     private authService: AuthService,
     private router: Router,
-    private popUp: MatSnackBar
-  ) {}
+    private detector: ChangeDetectorRef
+  ) { }
 
   register() {
     this.Loading = true;
@@ -42,38 +42,28 @@ export class Register implements OnInit{
     };
 
     this.authService.register(sender)
-    .pipe(
-      finalize(() => {
-        this.Loading = false;
-      })
-    )
-    .subscribe({
-      next: () => {
-        this.popUp.open(
-          "Account created successfully, You'll redirect to Login after 3 second",
-          'Done',
-          {
-            duration: 4000,
-          }
-        );
-        setInterval(() => this.router.navigate(['/login']), 3000);
-      },
-      error: (error) => {
-        if (error.message || error.error) {
-          this.popUp.open(
-            error.message,
-            'Done',
-            {
-              duration: 3000,
-            }
-          );
-        }
-      },
-    });
+      .pipe(
+        finalize(() => {
+          this.Loading = false;
+          this.detector.markForCheck();
+        })
+      )
+      .subscribe({
+        next: () => {
+          toast.success("Account created successfully", {
+            description: "You'll be redirected to Login in 3 seconds",
+            duration: 4000
+          });
+          setTimeout(() => this.router.navigate(['/auth/login']), 3000);
+        },
+        error: (error) => {
+          toast.error(error?.error?.message || error?.message || 'Something went wrong!');
+        },
+      });
   }
 
-  ngOnInit(){
-    if(this.authService.isLoggedIn()){
+  ngOnInit() {
+    if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
   }
