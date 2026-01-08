@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
     private authService: AuthService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   canActivate(): boolean {
     if (!isPlatformBrowser(this.platformId)) {
@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     const token = this.authService.getToken();
 
     if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/auth/login']);
       return false;
     }
 

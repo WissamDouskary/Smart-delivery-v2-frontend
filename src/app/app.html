@@ -1,4 +1,6 @@
-@if (!isAuthPage()) {
-    <app-navbar ngSkipHydration></app-navbar>
-}
+<div id="navbar-wrapper">
+    @if (!isAuthPage()) {
+        <app-navbar ngSkipHydration></app-navbar>
+    }
+</div>
 <router-outlet></router-outlet>
