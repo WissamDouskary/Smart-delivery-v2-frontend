@@ -52,6 +52,16 @@ export class Login {
       });
   }
 
+  loginWithGoogle(): void {
+    console.log('Login with Google clicked');
+    // Implementation for Google login goes here
+  }
+
+  loginWithFacebook(): void {
+    console.log('Login with Facebook clicked');
+    // Implementation for Facebook login goes here
+  }
+
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);

@@ -62,6 +62,16 @@ export class Register implements OnInit {
       });
   }
 
+  registerWithGoogle(): void {
+    console.log('Register with Google clicked');
+    // Implementation for Google registration goes here
+  }
+
+  registerWithFacebook(): void {
+    console.log('Register with Facebook clicked');
+    // Implementation for Facebook registration goes here
+  }
+
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
