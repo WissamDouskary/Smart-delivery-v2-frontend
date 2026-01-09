@@ -53,13 +53,11 @@ export class Login {
   }
 
   loginWithGoogle(): void {
-    console.log('Login with Google clicked');
-    // Implementation for Google login goes here
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 
   loginWithFacebook(): void {
-    console.log('Login with Facebook clicked');
-    // Implementation for Facebook login goes here
+    window.location.href = 'http://localhost:8080/oauth2/authorization/facebook';
   }
 
   ngOnInit() {

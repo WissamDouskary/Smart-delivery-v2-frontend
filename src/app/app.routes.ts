@@ -29,6 +29,10 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'oauth2/callback',
+    loadComponent: () => import("./features/auth/components/OAuth2CallbackComponent").then(o => o.OAuth2CallbackComponent),
+  },
+  {
     path: '**',
     loadComponent: () => import('./pages/not-found/not-found.page').then((n) => n.NotFound),
   },
