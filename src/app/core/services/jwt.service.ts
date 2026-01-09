@@ -1,11 +1,8 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })
 export class jwtService {
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
-
   decodeToken(token: string): any {
     try {
       return jwtDecode(token);
@@ -16,9 +13,6 @@ export class jwtService {
   }
 
   getRole(): string | null {
-    if (!isPlatformBrowser(this.platformId)) {
-      return null;
-    }
     const token = localStorage.getItem('jwtToken');
     if (token) {
       const role: string = this.decodeToken(token).roles;

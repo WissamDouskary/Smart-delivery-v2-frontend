@@ -68,11 +68,15 @@
       </div>
 
   <!-- Cards Grid -->
+   @if (colis().length > 0) {
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    @if (colis()) {
+    
         @for (item of colis(); track item.id) {
-        <app-card [colis]="item"></app-card>
-        } 
-    }
+          <app-card [colis]="item"></app-card>
+        }
+
   </div>
+  } @else {
+    <p class="text-red-500 pt-6 text-center">{{errorMessage}}</p>    
+  }
 </div>

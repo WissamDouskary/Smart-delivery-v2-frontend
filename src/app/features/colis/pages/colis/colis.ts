@@ -18,6 +18,7 @@ export class Colis implements OnInit {
 
   colis = signal<colis[]>([]);
   loading: boolean = false;
+  errorMessage: string = "";
 
   ngOnInit(): void {
     this.getAllColis();
@@ -39,7 +40,10 @@ export class Colis implements OnInit {
           this.colis.set(res);
         },
         error: (err: any) => {
-          toast.error(err.message);
+          console.log(err);
+          this.errorMessage = err?.error?.message;
+          this.detector.markForCheck()
+          toast.error(err?.error?.message);
         },
       });
   }
