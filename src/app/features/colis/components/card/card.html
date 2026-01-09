@@ -1,0 +1,82 @@
+<div
+  class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group overflow-hidden"
+>
+  <div class="p-6">
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">#{{colis.id.slice(-8).toUpperCase()}}</span>
+      <span
+        class="px-3 py-1 rounded-full text-xs font-semibold ring-1"
+        [ngClass]="getStatusClass(colis.status)"
+        >{{getStatusLabel(colis.status)}}</span
+      >
+    </div>
+
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="text-lg font-bold text-slate-800 leading-tight">{{colis.description}}</h3>
+      <span class="text-xs font-medium" [ngClass]="getPriorityClass(colis.priority)">
+        {{colis.poids}}kg
+      </span>
+    </div>
+
+    <p class="text-sm text-slate-500 mb-6 flex items-center gap-1">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+        />
+      </svg>
+      {{colis.city.nom}} → {{colis.vileDistination}}
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="mb-6">
+      <div class="flex justify-between text-xs mb-2">
+        <span class="text-slate-400">Progression</span>
+        <span class="font-bold" [style.color]="getStatusClass(colis.status).includes('text-amber') ? '#d97706' : 
+                                               getStatusClass(colis.status).includes('text-blue') ? '#2563eb' : 
+                                               getStatusClass(colis.status).includes('text-purple') ? '#9333ea' : '#059669'">
+          {{getProgress(colis.status)}}%
+        </span>
+      </div>
+      <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+        <div class="h-full transition-all duration-500 rounded-full" 
+             [ngClass]="getProgressClass(colis.status)"
+             [style.width.%]="getProgress(colis.status)"></div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between pt-4 border-t border-slate-50">
+      <div class="text-xs">
+        <p class="text-slate-400 uppercase">Destinataire</p>
+        <p class="font-bold text-slate-700">{{colis.receiver.prenom}} {{colis.receiver.nom}}</p>
+      </div>
+      <button
+        class="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

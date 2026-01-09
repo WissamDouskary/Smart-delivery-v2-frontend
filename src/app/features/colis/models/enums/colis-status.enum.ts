@@ -1,0 +1,6 @@
+export enum COLIS_STATUS {
+    CREATED = 'CREATED',
+    COLLECTED = 'COLLECTED',
+    IN_STOCK = 'IN_STOCK',
+    LIVRED = 'LIVRED'
+}
