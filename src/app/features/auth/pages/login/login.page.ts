@@ -44,6 +44,8 @@ export class Login {
             this.router.navigate(['/admin/dashboard']);
           } else if (response.userRole === 'Sender') {
             this.router.navigate(['/']);
+          } else if (response.userRole === 'Livreur'){
+            this.router.navigate(['/colis'])
           }
         },
         error: (err: any) => {

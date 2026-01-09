@@ -25,7 +25,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/colis/pages/colis/colis').then((c) => c.Colis),
     canActivate: [AuthGuard, RoleGuard],
     data: {
-      roles: ['Sender', 'Manager'],
+      roles: ['Sender', 'Manager', 'Livreur'],
     },
   },
   {
