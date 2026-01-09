@@ -63,13 +63,11 @@ export class Register implements OnInit {
   }
 
   registerWithGoogle(): void {
-    console.log('Register with Google clicked');
-    // Implementation for Google registration goes here
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 
   registerWithFacebook(): void {
-    console.log('Register with Facebook clicked');
-    // Implementation for Facebook registration goes here
+    window.location.href = 'http://localhost:8080/oauth2/authorization/facebook';
   }
 
   ngOnInit() {
