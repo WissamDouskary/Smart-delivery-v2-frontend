@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { colis } from '../../models/get-colis.model';
 import { COLIS_PRIORITY } from '../../models/enums/colis-priority.enum';
 import { COLIS_STATUS } from '../../models/enums/colis-status.enum';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './card.html',
   styleUrl: './card.css',
 })
