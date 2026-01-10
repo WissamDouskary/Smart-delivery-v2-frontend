@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -7,15 +7,10 @@ import { isPlatformBrowser } from '@angular/common';
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private router: Router
   ) { }
 
   canActivate(): boolean {
-    if (!isPlatformBrowser(this.platformId)) {
-      return true;
-    }
-
     const token = this.authService.getToken();
 
     if (!this.authService.isLoggedIn()) {

@@ -1,0 +1,5 @@
+export enum COLIS_PRIORITY {
+    URGENT = 'URGENT',
+    NORMALE = 'NORMALE',
+    NON_URGENT = 'NON_URGENT'
+}

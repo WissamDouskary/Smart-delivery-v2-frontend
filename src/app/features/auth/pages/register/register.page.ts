@@ -62,6 +62,14 @@ export class Register implements OnInit {
       });
   }
 
+  registerWithGoogle(): void {
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+  }
+
+  registerWithFacebook(): void {
+    window.location.href = 'http://localhost:8080/oauth2/authorization/facebook';
+  }
+
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);

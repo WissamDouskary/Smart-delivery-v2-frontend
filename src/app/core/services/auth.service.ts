@@ -1,5 +1,4 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 import { catchError, tap, throwError } from 'rxjs';
 import { jwtService } from './jwt.service';
 import { AuthApi } from '../../features/auth/auth.api';
@@ -14,7 +13,6 @@ export class AuthService {
 
   constructor(
     private authApi: AuthApi,
-    @Inject(PLATFORM_ID) private platformId: Object,
     private jwtSer: jwtService
   ) {}
 
@@ -27,7 +25,6 @@ export class AuthService {
       .login(body)
       .pipe(
         tap((res: authResponse) => {
-          if (!this.isBrowser()) return;
           localStorage.setItem('jwtToken', res.token);
           localStorage.setItem('userRole', res.userRole);
         }),
@@ -38,13 +35,11 @@ export class AuthService {
   }
 
   logout(): void {
-    if (!this.isBrowser()) return;
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('userRole');
   }
 
   getToken(): string | null {
-    if (!this.isBrowser()) return null;
     return localStorage.getItem('jwtToken');
   }
 
@@ -57,12 +52,7 @@ export class AuthService {
   }
 
   getUserRole(): string | null {
-    if (!this.isBrowser()) return null;
     return this.jwtSer.getRole();
-  }
-
-  private isBrowser(): boolean {
-    return isPlatformBrowser(this.platformId);
   }
 
   hasRole(role: string): boolean {
