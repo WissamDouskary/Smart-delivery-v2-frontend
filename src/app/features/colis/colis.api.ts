@@ -11,4 +11,8 @@ export class ColisApi {
     getAllColis(){
         return this.apiService.get<colis[]>("colis");
     }
+
+    getColisById(id: string | null){
+        return this.apiService.get<colis>(`colis/${id}`); 
+    }
 }

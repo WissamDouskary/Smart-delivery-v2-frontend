@@ -18,4 +18,13 @@ export class colisService {
         )
       )
   }
+
+  getColisById(id: string | null){
+    return this.colisApi.getColisById(id)
+    .pipe(
+      map((res: any) => {
+        return res.data;
+      })
+    )
+  }
 }
