@@ -2,10 +2,11 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 
 import { routes } from './app.routes';
-import { HttpClient, httpResource, provideHttpClient, withFetch } from '@angular/common/http';
+import { HttpClient, httpResource, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AUTH_PROVIDERS } from './features/auth/auth.providers';
 import { CORE_PROVIDERS } from './core/core.providers';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withEnabledBlockingInitialNavigation()),
     AUTH_PROVIDERS,
-    CORE_PROVIDERS
+    CORE_PROVIDERS,
   ],
 };
