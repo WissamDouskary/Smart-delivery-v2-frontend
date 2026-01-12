@@ -7,10 +7,11 @@ import { toast } from 'ngx-sonner';
 import { finalize, map } from 'rxjs';
 import { FormsModule } from "@angular/forms";
 import { jwtService } from '../../../../core/services/jwt.service';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-colis',
-  imports: [Card, FormsModule],
+  imports: [Card, FormsModule, RouterLink],
   templateUrl: './colis.html',
   styleUrl: './colis.css',
 })
