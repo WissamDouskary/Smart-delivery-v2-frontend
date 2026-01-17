@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Sender } from '../../models/sender.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { finalize, timeout } from 'rxjs';
 import { toast } from 'ngx-sonner';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -21,8 +21,6 @@ export class Register implements OnInit {
   Email: string = '';
   Password: string = '';
 
-  Loading: boolean = false;
-
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -30,8 +28,6 @@ export class Register implements OnInit {
   ) { }
 
   register() {
-    this.Loading = true;
-
     const sender: Sender = {
       nom: this.Nom,
       prenom: this.Prenom,
@@ -42,12 +38,6 @@ export class Register implements OnInit {
     };
 
     this.authService.register(sender)
-      .pipe(
-        finalize(() => {
-          this.Loading = false;
-          this.detector.markForCheck();
-        })
-      )
       .subscribe({
         next: () => {
           toast.success("Account created successfully", {
