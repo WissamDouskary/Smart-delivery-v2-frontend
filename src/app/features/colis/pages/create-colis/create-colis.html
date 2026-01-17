@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-neutral-50 p-4 lg:p-8">
-  <div class="max-w-4xl mx-auto space-y-8">
+  <form (submit)="submitForm()" class="max-w-4xl mx-auto space-y-8">
     <!-- Header -->
     <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -7,10 +7,10 @@
         <p class="text-neutral-500 mt-1">Fill in the details to register a new shipment.</p>
       </div>
       <div class="flex gap-3">
-        <button routerLink="../../colis" class="px-6 py-2.5 rounded-xl font-medium text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
+        <button type="button" routerLink="../../colis" class="px-6 py-2.5 rounded-xl font-medium text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
           Cancel
         </button>
-        <button class="px-6 py-2.5 rounded-xl font-medium text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
+        <button type="submit" class="px-6 py-2.5 rounded-xl font-medium text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
           Save Colis
         </button>
       </div>
@@ -34,28 +34,113 @@
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-neutral-700 mb-1">Description</label>
               <textarea 
+                [(ngModel)]="description"
+                name="description"
                 rows="3" 
                 placeholder="Brief description of the Colis content..." 
                 class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
               ></textarea>
             </div>
-            
-            <div>
-              <label class="block text-sm font-semibold text-neutral-700 mb-1">Weight (kg)</label>
-              <input 
-                type="number" 
-                placeholder="0.00" 
-                class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-              >
-            </div>
 
             <div>
               <label class="block text-sm font-semibold text-neutral-700 mb-1">Destination City</label>
               <input 
+                [(ngModel)]="vileDistination"
+                name="vileDistination"
                 type="text" 
                 placeholder="e.g. Casablanca" 
                 class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               >
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Sender Details -->
+        <section *ngIf="isAdmin()" class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-100 space-y-5">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <h2 class="text-lg font-bold text-neutral-800">Sender Details</h2>
+            </div>
+            
+            <!-- Sender Mode Toggle -->
+            <div class="flex bg-neutral-100 p-1 rounded-lg">
+              <button 
+                type="button"
+                (click)="toggleSenderMode('new')"
+                [class.bg-white]="senderMode() === 'new'"
+                [class.shadow-sm]="senderMode() === 'new'"
+                [class.text-blue-600]="senderMode() === 'new'"
+                class="px-3 py-1.5 text-xs font-bold rounded-md transition-all text-neutral-500"
+              >New</button>
+              <button 
+                type="button"
+                (click)="toggleSenderMode('existing')"
+                [class.bg-white]="senderMode() === 'existing'"
+                [class.shadow-sm]="senderMode() === 'existing'"
+                [class.text-blue-600]="senderMode() === 'existing'"
+                class="px-3 py-1.5 text-xs font-bold rounded-md transition-all text-neutral-500"
+              >Existing</button>
+            </div>
+          </div>
+
+          <!-- New Receiver Form -->
+          <div *ngIf="senderMode() === 'new'" class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in duration-300">
+            <div>
+              <label class="block text-sm font-semibold text-neutral-700 mb-1">First Name</label>
+              <input [(ngModel)]="senderFirstName" name="senderFirstName" type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-neutral-700 mb-1">Last Name</label>
+              <input [(ngModel)]="senderLastName" name="senderLastName" type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-neutral-700 mb-1">Email</label>
+              <input [(ngModel)]="senderEmail" name="senderEmail" type="email" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-neutral-700 mb-1">Telephone</label>
+              <input [(ngModel)]="senderTelephone" name="senderTelephone" type="tel" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-semibold text-neutral-700 mb-1">Full Address</label>
+              <textarea [(ngModel)]="senderAdresse" name="senderAdresse" rows="2" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"></textarea>
+            </div>
+          </div>
+
+          <!-- Existing Sender Selection -->
+          <div *ngIf="senderMode() === 'existing'" class="space-y-4 animate-in fade-in duration-300">
+            <div>
+              <label class="block text-sm font-semibold text-neutral-700 mb-1">Select Sender</label>
+              <div class="relative group">
+                <select name="sender" [(ngModel)]="sender" class="w-full px-10 py-3 bg-neutral-50 border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                  <option value="" disabled selected>Search for a Sender...</option>
+                  <option *ngFor="let r of existingSenders()" [value]="r.id">{{r.prenom}} {{r.nom}} ({{r.telephone}})</option>
+                </select>
+                <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-neutral-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-neutral-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 flex items-start gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="text-xs text-blue-700 leading-relaxed">
+                Selecting an existing receiver will automatically populate their address and contact information for this delivery.
+              </p>
             </div>
           </div>
         </section>
@@ -75,6 +160,7 @@
             <!-- Receiver Mode Toggle -->
             <div class="flex bg-neutral-100 p-1 rounded-lg">
               <button 
+                type="button"
                 (click)="toggleReceiverMode('new')"
                 [class.bg-white]="receiverMode() === 'new'"
                 [class.shadow-sm]="receiverMode() === 'new'"
@@ -82,6 +168,7 @@
                 class="px-3 py-1.5 text-xs font-bold rounded-md transition-all text-neutral-500"
               >New</button>
               <button 
+                type="button"
                 (click)="toggleReceiverMode('existing')"
                 [class.bg-white]="receiverMode() === 'existing'"
                 [class.shadow-sm]="receiverMode() === 'existing'"
@@ -95,23 +182,23 @@
           <div *ngIf="receiverMode() === 'new'" class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in duration-300">
             <div>
               <label class="block text-sm font-semibold text-neutral-700 mb-1">First Name</label>
-              <input type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+              <input [(ngModel)]="receiverFirstName" name="receiverFirstName" type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
             </div>
             <div>
               <label class="block text-sm font-semibold text-neutral-700 mb-1">Last Name</label>
-              <input type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+              <input [(ngModel)]="receiverLastName" name="receiverLastName" type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
             </div>
             <div>
               <label class="block text-sm font-semibold text-neutral-700 mb-1">Email</label>
-              <input type="email" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+              <input [(ngModel)]="receiverEmail" name="receiverEmail" type="email" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
             </div>
             <div>
               <label class="block text-sm font-semibold text-neutral-700 mb-1">Telephone</label>
-              <input type="tel" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+              <input [(ngModel)]="receiverTelephone" name="receiverTelephone" type="tel" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-neutral-700 mb-1">Full Address</label>
-              <textarea rows="2" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"></textarea>
+              <textarea [(ngModel)]="receiverAdresse" name="receiverAdresse" rows="2" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"></textarea>
             </div>
           </div>
 
@@ -120,7 +207,7 @@
             <div>
               <label class="block text-sm font-semibold text-neutral-700 mb-1">Select Receiver</label>
               <div class="relative group">
-                <select class="w-full px-10 py-3 bg-neutral-50 border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                <select name="receiver" [(ngModel)]="receiver" class="w-full px-10 py-3 bg-neutral-50 border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
                   <option value="" disabled selected>Search for a receiver...</option>
                   <option *ngFor="let r of existingReceivers()" [value]="r.id">{{r.prenom}} {{r.nom}} ({{r.telephone}})</option>
                 </select>
@@ -148,6 +235,51 @@
           </div>
         </section>
 
+        <section class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-100 space-y-5">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <h2 class="text-lg font-bold text-neutral-800">city Details</h2>
+            </div>
+          </div>
+
+          <!-- Existing city Selection -->
+          <div class="space-y-4 animate-in fade-in duration-300">
+            <div>
+              <label class="block text-sm font-semibold text-neutral-700 mb-1">Select city</label>
+              <div class="relative group">
+                <select name="city" [(ngModel)]="city" class="w-full px-10 py-3 bg-neutral-50 border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                  <option value="" disabled selected>Search for a city...</option>
+                  <option *ngFor="let c of existingcitys()" [value]="c.id">{{c.nom}} ({{c.codePostal}})</option>
+                </select>
+                <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-neutral-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-neutral-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 flex items-start gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="text-xs text-blue-700 leading-relaxed">
+                Selecting an existing city will automatically populate their address and contact information for this delivery.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <!-- Section: Products -->
         <section class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-100 space-y-5">
           <div class="flex items-center justify-between">
@@ -160,6 +292,7 @@
               <h2 class="text-lg font-bold text-neutral-800">Products</h2>
             </div>
             <button 
+              type="button"
               (click)="openProductModal()"
               class="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
             >
@@ -187,14 +320,15 @@
                   <td class="py-4 px-2 text-neutral-500">{{item.category}}</td>
                   <td class="py-4 px-2">
                     <div class="flex items-center justify-center gap-2">
-                      <button (click)="updateQuantity(i, -1)" class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-red-50 hover:text-red-600 transition-colors">-</button>
+                      <button type="button" (click)="updateQuantity(i, -1)" class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-red-50 hover:text-red-600 transition-colors">-</button>
                       <span class="w-8 text-center font-bold">{{item.quantity}}</span>
-                      <button (click)="updateQuantity(i, 1)" class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-green-50 hover:text-green-600 transition-colors">+</button>
+                      <button type="button" (click)="updateQuantity(i, 1)" class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-green-50 hover:text-green-600 transition-colors">+</button>
                     </div>
                   </td>
                   <td class="py-4 px-2 text-right font-bold text-neutral-900">{{item.price}} MAD</td>
                   <td class="py-4 px-2 text-right">
                     <button 
+                      type="button"
                       (click)="removeProduct(i)"
                       class="p-1.5 text-neutral-300 hover:text-red-500 transition-colors"
                     >
@@ -223,7 +357,7 @@
           
           <div class="space-y-3">
             <label class="flex items-center p-3 rounded-xl border border-rose-100 bg-rose-50/50 cursor-pointer hover:bg-rose-50 transition-colors">
-              <input type="radio" name="priority" class="w-4 h-4 text-rose-600 focus:ring-rose-500">
+              <input type="radio" name="priority" [(ngModel)]="priority" value="URGENT" class="w-4 h-4 text-rose-600 focus:ring-rose-500">
               <div class="ml-3">
                 <p class="text-sm font-bold text-rose-700">Urgent</p>
                 <p class="text-xs text-rose-600/70">Highest priority delivery</p>
@@ -231,7 +365,7 @@
             </label>
 
             <label class="flex items-center p-3 rounded-xl border border-blue-100 bg-blue-50/50 cursor-pointer hover:bg-blue-50 transition-colors">
-              <input type="radio" name="priority" checked class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <input type="radio" name="priority" [(ngModel)]="priority" value="NORMALE" checked class="w-4 h-4 text-blue-600 focus:ring-blue-500">
               <div class="ml-3">
                 <p class="text-sm font-bold text-blue-700">Normal</p>
                 <p class="text-xs text-blue-600/70">Standard delivery time</p>
@@ -239,7 +373,7 @@
             </label>
 
             <label class="flex items-center p-3 rounded-xl border border-neutral-100 bg-neutral-50/50 cursor-pointer hover:bg-neutral-50 transition-colors">
-              <input type="radio" name="priority" class="w-4 h-4 text-neutral-600 focus:ring-neutral-500">
+              <input type="radio" name="priority" [(ngModel)]="priority" value="NON_URGENT" class="w-4 h-4 text-neutral-600 focus:ring-neutral-500">
               <div class="ml-3">
                 <p class="text-sm font-bold text-neutral-700">Non-Urgent</p>
                 <p class="text-xs text-neutral-600/70">Flexible delivery date</p>
@@ -261,16 +395,10 @@
               <span>{{totalWeight()}} kg</span>
             </div>
           </div>
-          <div class="pt-4 border-t border-neutral-800 flex justify-between items-end">
-            <div>
-              <p class="text-xs text-neutral-500 uppercase">Estimated Fee</p>
-              <p class="text-2xl font-bold">{{estimatedFee()}} MAD</p>
-            </div>
-          </div>
         </section>
       </div>
     </div>
-  </div>
+  </form>
 </div>
 
 <!-- Product Modal Overlay -->
@@ -282,7 +410,7 @@
         <h2 class="text-xl font-bold text-neutral-900">Add Product</h2>
         <p class="text-xs text-neutral-500">Select an existing product or add a new one.</p>
       </div>
-      <button (click)="closeProductModal()" class="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-all">
+      <button type="button" (click)="closeProductModal()" class="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-all">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -292,12 +420,14 @@
     <!-- Modal Tabs -->
     <div class="flex border-b border-neutral-100">
       <button 
+        type="button"
         (click)="setProductMode('select')"
         [class.border-blue-600]="productMode() === 'select'"
         [class.text-blue-600]="productMode() === 'select'"
         class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent transition-all"
       >Select Existing</button>
       <button 
+        type="button"
         (click)="setProductMode('new')"
         [class.border-blue-600]="productMode() === 'new'"
         [class.text-blue-600]="productMode() === 'new'"
@@ -310,7 +440,7 @@
       <!-- Select Existing -->
       <div *ngIf="productMode() === 'select'" class="space-y-4 animate-in fade-in duration-300">
         <div class="relative">
-          <input type="text" placeholder="Search product name..." class="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+          <input type="text" [(ngModel)]="productSearcher" (ngModelChange)="onSearch()" placeholder="Search product name..." class="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-3 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -318,7 +448,7 @@
 
         <div class="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-1">
           <div 
-            *ngFor="let p of availableProducts"
+            *ngFor="let p of availableProducts()"
             (click)="addProduct(p)"
             class="p-4 rounded-xl border border-neutral-100 hover:border-blue-200 hover:bg-blue-50/50 cursor-pointer transition-all flex items-center justify-between group"
           >
@@ -343,11 +473,11 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="col-span-2">
             <label class="block text-sm font-semibold text-neutral-700 mb-1">Product Name</label>
-            <input type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+            <input [(ngModel)]="productName" type="text" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
           </div>
           <div>
             <label class="block text-sm font-semibold text-neutral-700 mb-1">Category</label>
-            <select class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+            <select [(ngModel)]="productCategorie" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500/20">
               <option>Electronics</option>
               <option>Audio</option>
               <option>Clothing</option>
@@ -356,19 +486,16 @@
           </div>
           <div>
             <label class="block text-sm font-semibold text-neutral-700 mb-1">Price (MAD)</label>
-            <input type="number" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20">
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-neutral-700 mb-1">Quantity</label>
-            <input type="number" value="1" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+            <input [(ngModel)]="productPrice" type="number" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20">
           </div>
           <div>
             <label class="block text-sm font-semibold text-neutral-700 mb-1">Weight (kg)</label>
-            <input type="number" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+            <input [(ngModel)]="productWeight" type="number" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20">
           </div>
         </div>
         <button 
-          (click)="addProduct({nom: 'New Product', category: 'Other', price: 0, poids: 0})"
+          type="button"
+          (click)="addProduct({nom: productName, category: productCategorie, price: productPrice, poids: productWeight})"
           class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all active:scale-[0.98]"
         >
           Add to List
