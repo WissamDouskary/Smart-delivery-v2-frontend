@@ -13,13 +13,6 @@
 
     <!-- Form Card -->
     <div class="bg-white/80 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-      <!-- Loading Overlay -->
-      <div *ngIf="Loading" class="absolute inset-0 z-50 bg-white/60 backdrop-blur-sm flex items-center justify-center transition-all">
-        <div class="flex flex-col items-center">
-          <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p class="mt-4 text-blue-700 font-bold animate-pulse">Creating your account...</p>
-        </div>
-      </div>
 
       <form (ngSubmit)="register()" #RegisterForm="ngForm" class="space-y-6">
         <!-- Name Grid -->
@@ -134,7 +127,7 @@
         <button
           type="submit"
           class="w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-lg hover:shadow-blue-500/25 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.01]"
-          [disabled]="RegisterForm.invalid || Loading"
+          [disabled]="RegisterForm.invalid"
         >
           Create Account
         </button>
