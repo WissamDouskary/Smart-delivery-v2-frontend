@@ -24,23 +24,15 @@ export class SingleColis implements OnInit {
 
   colis = signal<colis | null>(null);
   errorMessage: string = "";
-  loading: boolean = false;
 
   readonly Status = COLIS_STATUS;
   readonly Priority = COLIS_PRIORITY;
 
   getColisInformation() {
     const id = this.router.snapshot.paramMap.get('id');
-    
-    this.loading = true;
 
     this.colisSer.getColisById(id)
-    .pipe(
-      finalize(() => {
-        this.loading = false;
-        this.detector.markForCheck();
-      })
-    )  
+    .pipe()  
     .subscribe({
       next: (res) => {
         console.log(res);
