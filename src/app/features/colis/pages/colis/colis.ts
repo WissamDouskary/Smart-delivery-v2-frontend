@@ -5,13 +5,13 @@ import { subscribe } from 'diagnostics_channel';
 import { colis } from '../../models/get-colis.model';
 import { toast } from 'ngx-sonner';
 import { finalize, map } from 'rxjs';
-import { FormsModule } from "@angular/forms";
 import { jwtService } from '../../../../core/services/jwt.service';
 import { RouterLink } from "@angular/router";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-colis',
-  imports: [Card, FormsModule, RouterLink],
+  imports: [Card, RouterLink, FormsModule],
   templateUrl: './colis.html',
   styleUrl: './colis.css',
 })
@@ -23,7 +23,6 @@ export class Colis implements OnInit {
 
   searchTerm: string = "";
   colis = signal<colis[]>([]);
-  loading: boolean = false;
   errorMessage: string = "";
 
   ngOnInit(): void {
@@ -46,15 +45,8 @@ export class Colis implements OnInit {
   }
 
   getAllColis() {
-    this.loading = true;
     this.colisServ
       .getColis()
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.detector.markForCheck();
-        })
-      )
       .subscribe({
         next: (res) => {
           this.colis.set(res);
