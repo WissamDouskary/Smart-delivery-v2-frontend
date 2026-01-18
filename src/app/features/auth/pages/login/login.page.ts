@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
 import { toast } from 'ngx-sonner';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,6 @@ import { toast } from 'ngx-sonner';
 export class Login {
   email: string = '';
   password: string = '';
-  Loading: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -25,14 +24,12 @@ export class Login {
   ) { }
 
   login(): void {
-    this.Loading = true;
 
     const body = { email: this.email, password: this.password };
 
     this.authService.login(body)
       .pipe(
         finalize(() => {
-          this.Loading = false;
           this.detector.markForCheck();
         })
       )
@@ -45,6 +42,8 @@ export class Login {
           } else if (response.userRole === 'Sender') {
             this.router.navigate(['/']);
           } else if (response.userRole === 'Livreur'){
+            this.router.navigate(['/colis'])
+          } else if (response.userRole === 'Receiver'){
             this.router.navigate(['/colis'])
           }
         },

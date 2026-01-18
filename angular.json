@@ -33,6 +33,7 @@
             ],
             "styles": [
               "src/material-theme.scss",
+              "node_modules/ngx-spinner/animations/ball-pulse.css",
               "src/styles.css"
             ]
           },
