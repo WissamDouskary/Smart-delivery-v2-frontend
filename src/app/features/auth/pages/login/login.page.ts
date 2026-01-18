@@ -43,6 +43,8 @@ export class Login {
             this.router.navigate(['/']);
           } else if (response.userRole === 'Livreur'){
             this.router.navigate(['/colis'])
+          } else if (response.userRole === 'Receiver'){
+            this.router.navigate(['/colis'])
           }
         },
         error: (err: any) => {
