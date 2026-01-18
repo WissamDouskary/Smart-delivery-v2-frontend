@@ -25,7 +25,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/colis/pages/colis/colis').then((c) => c.Colis),
     canActivate: [AuthGuard, RoleGuard],
     data: {
-      roles: ['Sender', 'Manager', 'Livreur'],
+      roles: ['Sender', 'Manager', 'Livreur', 'Receiver'],
     },
   },
   {
@@ -45,7 +45,7 @@ export const routes: Routes = [
     loadComponent: () => import("./features/colis/pages/colis-precise/single-colis/single-colis").then(c => c.SingleColis),
     canActivate: [AuthGuard, RoleGuard],
     data: {
-      roles: ['Sender', 'Manager', 'Livreur'],
+      roles: ['Sender', 'Manager', 'Livreur', 'Receiver'],
     },
   },
   {
