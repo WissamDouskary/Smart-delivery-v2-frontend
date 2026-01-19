@@ -37,11 +37,11 @@
            Colis
         </a>
 
-        <a routerLink="/clients" 
+        <a routerLink="/admin/users" 
            *ngIf="hasRole('Manager')" 
            routerLinkActive="bg-blue-50 text-blue-600"
            class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-           Clients
+           Users
         </a>
 
         <div class="h-6 w-px bg-gray-200 mx-2" *ngIf="isLoggedIn()"></div>
@@ -99,10 +99,10 @@
          class="block px-4 py-3 rounded-xl font-medium hover:bg-blue-500 transition-colors duration-200">
          Colis
       </a>
-      <a routerLink="/clients" (click)="toggleMenu()" *ngIf="hasRole('Manager')" 
+      <a routerLink="/admin/users" (click)="toggleMenu()" *ngIf="hasRole('Manager')" 
          routerLinkActive="bg-blue-700 shadow-inner"
          class="block px-4 py-3 rounded-xl font-medium hover:bg-blue-500 transition-colors duration-200">
-         Clients
+         Users
       </a>
       <div class="border-t border-blue-500 my-4"></div>
       <a routerLink="/profile" (click)="toggleMenu()" *ngIf="isLoggedIn()" 
