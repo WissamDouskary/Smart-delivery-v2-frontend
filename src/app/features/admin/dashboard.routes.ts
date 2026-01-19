@@ -11,4 +11,12 @@ export const DASHBOARD_ROUTES: Routes = [
       roles: ['Manager'],
     },
   },
+  {
+    path: 'users',
+    loadComponent: (() => import("./pages/users/user-list").then(m => m.UserList)),
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['Manager'],
+    },
+  },
 ];
