@@ -1,0 +1,102 @@
+<div class="p-6 max-w-7xl mx-auto">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Users</h1>
+      <p class="text-sm text-gray-500">Manage application users and roles</p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="flex gap-2">
+      <button 
+        (click)="setRoleFilter('All')"
+        [class.btn-filter-active]="selectedRole() === 'All'"
+        [class.btn-filter-inactive]="selectedRole() !== 'All'"
+        class="btn-filter">
+        All
+      </button>
+      <button 
+        (click)="setRoleFilter('Sender')"
+        [class.btn-filter-active]="selectedRole() === 'Sender'"
+        [class.btn-filter-inactive]="selectedRole() !== 'Sender'"
+        class="btn-filter">
+        Senders
+      </button>
+      <button 
+        (click)="setRoleFilter('Livreur')"
+        [class.btn-filter-active]="selectedRole() === 'Livreur'"
+        [class.btn-filter-inactive]="selectedRole() !== 'Livreur'"
+        class="btn-filter">
+        Livreurs
+      </button>
+      <button 
+        (click)="setRoleFilter('Receiver')"
+        [class.btn-filter-active]="selectedRole() === 'Receiver'"
+        [class.btn-filter-inactive]="selectedRole() !== 'Receiver'"
+        class="btn-filter">
+        Receivers
+      </button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="mb-6">
+    <input 
+      type="text" 
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
+      placeholder="Search by name, email or phone..."
+      class="w-full max-w-md p-2.5 bg-white border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none">
+  </div>
+
+  <!-- Users Table -->
+  <div class="table-container">
+    <table *ngIf="!isLoading()">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Contact</th>
+          <th>Role</th>
+          <th>Info</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers()">
+          <td>
+            <div class="font-medium text-gray-900">{{ user.nom }} {{ user.prenom }}</div>
+            <div class="text-xs text-gray-500">ID: {{ user.id.slice(0, 8) }}</div>
+          </td>
+          <td>
+            <div class="text-sm text-gray-900">{{ user.email || 'N/A' }}</div>
+            <div class="text-sm text-gray-500">{{ user.telephone }}</div>
+          </td>
+          <td>
+            <span class="badge" 
+                  [ngClass]="{
+                    'badge-sender': user.role === 'Sender',
+                    'badge-livreur': user.role === 'Livreur',
+                    'badge-receiver': user.role === 'Receiver'
+                  }">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <div class="text-sm text-gray-600">
+              <span *ngIf="user.role === 'Livreur'">{{ user.vehicle }} ({{ user.city?.nom }})</span>
+              <span *ngIf="user.role !== 'Livreur'">{{ user.adresse || 'No address' }}</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="p-12 text-center text-gray-500">
+      Loading users...
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading() && filteredUsers().length === 0" class="p-12 text-center text-gray-500">
+      No users found.
+    </div>
+  </div>
+</div>
