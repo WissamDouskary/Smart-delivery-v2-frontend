@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { colisResolver } from './core/resolvers/colis.resolver';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,9 @@ export const routes: Routes = [
     path: "colis/:id",
     loadComponent: () => import("./features/colis/pages/colis-precise/single-colis/single-colis").then(c => c.SingleColis),
     canActivate: [AuthGuard, RoleGuard],
+    resolve: {
+      colis: colisResolver
+    },
     data: {
       roles: ['Sender', 'Manager', 'Livreur', 'Receiver'],
     },
