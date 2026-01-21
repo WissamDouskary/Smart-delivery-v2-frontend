@@ -21,6 +21,8 @@ import { jwtService } from '../../../../core/services/jwt.service';
 import { newProductModel } from '../../../../core/models/new-product.model';
 import { newReceiverModel } from '../../../receivers/models/new-receiver.model';
 import { newSenderModel } from '../../../../core/models/new-sender.model';
+import { Store } from '@ngrx/store';
+import { addColis } from '../../../../core/state/colis/colis.actions';
 
 @Component({
   selector: 'app-create-colis',
@@ -36,6 +38,7 @@ export class CreateColis implements OnInit {
   private citySer = inject(CityService);
   private colisSer = inject(colisService);
   private jwtSer = inject(jwtService);
+  private store = inject(Store);
 
   receiverMode = signal<'new' | 'existing'>('existing');
   senderMode = signal<'new' | 'existing'>('existing');
@@ -62,14 +65,16 @@ export class CreateColis implements OnInit {
   existingSenders = signal<senderModel[]>([]);
 
   getExistingSenders() {
-    this.senderSer.getSenders().subscribe({
-      next: (data) => {
-        this.existingSenders.set(data);
-      },
-      error: (error) => {
-        toast.error('error getting Senders');
-      },
-    });
+    if (this.isAdmin()) {
+      this.senderSer.getSenders().subscribe({
+        next: (data) => {
+          this.existingSenders.set(data);
+        },
+        error: (error) => {
+          toast.error('error getting Senders');
+        },
+      });
+    }
   }
 
   existingReceivers = signal<ReceiverModel[]>([]);
@@ -121,19 +126,19 @@ export class CreateColis implements OnInit {
   city: string = '';
 
   // new reciever infos
-  receiverFirstName: string = "";
-  receiverLastName: string = "";
-  receiverEmail: string = "";
-  receiverTelephone: string = "";
-  receiverAdresse: string = "";
+  receiverFirstName: string = '';
+  receiverLastName: string = '';
+  receiverEmail: string = '';
+  receiverTelephone: string = '';
+  receiverAdresse: string = '';
 
   // new senders logic
 
-  senderFirstName: string = "";
-  senderLastName: string = "";
-  senderEmail: string = "";
-  senderTelephone: string = "";
-  senderAdresse: string = "";
+  senderFirstName: string = '';
+  senderLastName: string = '';
+  senderEmail: string = '';
+  senderTelephone: string = '';
+  senderAdresse: string = '';
 
   getCities() {
     this.citySer.getCities().subscribe({
@@ -173,8 +178,8 @@ export class CreateColis implements OnInit {
       prenom: '',
       email: '',
       telephone: '',
-      adresse: ''
-    } 
+      adresse: '',
+    };
 
     // receiver logic
     if (this.receiverMode() == 'new') {
@@ -192,8 +197,8 @@ export class CreateColis implements OnInit {
       prenom: '',
       email: '',
       telephone: '',
-      adresse: ''
-    } 
+      adresse: '',
+    };
 
     // sender logic
     if (this.senderMode() == 'new') {
@@ -209,18 +214,18 @@ export class CreateColis implements OnInit {
     let payload: createColisModel = {
       description: this.description,
       vileDistination: this.vileDistination,
-      receiver: this.receiver !== "" ?
-      {
-        id: this.receiver
-      } : 
-       newReciever
-      ,
-      sender: this.sender !== "" ? 
-      {
-        id: this.sender
-      } :
-        newSender 
-      ,
+      receiver:
+        this.receiver !== ''
+          ? {
+            id: this.receiver,
+          }
+          : newReciever,
+      sender:
+        this.sender !== ''
+          ? {
+            id: this.sender,
+          }
+          : newSender,
       products: productsIds as any,
       city: {
         id: this.city,
@@ -228,20 +233,9 @@ export class CreateColis implements OnInit {
       priority: this.priority,
     };
 
-    console.log(payload)
+    console.log(payload);
 
-    this.colisSer.saveColis(payload).subscribe({
-      next: (resp: any) => {
-        toast.success(resp.message);
-      },
-      error: (error) => {
-        if(error.error.message){
-          toast.error(error.error.message);
-        }else{
-          toast.error("error while creating colis");
-        }
-      }
-    })
+    this.store.dispatch(addColis({ colis: payload }));
   }
 
   updateQuantity(index: number, delta: number) {
