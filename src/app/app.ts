@@ -1,8 +1,11 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar/navbar';
 import { NgxSonnerToaster } from 'ngx-sonner';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { Store } from '@ngrx/store';
+import { initAuth, login, logout } from './core/state/auth/auth.actions';
+import { AuthEffects } from './core/state/auth/auth.effects';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +16,11 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 })
 
 export class App {
-  constructor(private router: Router) { }
+  private store = inject(Store);
+
+  constructor(private router: Router) {
+    this.store.dispatch(initAuth());
+  }
 
   isAuthPage(): boolean {
     return this.router.url.startsWith('/auth');
