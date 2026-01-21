@@ -50,7 +50,7 @@
 
   <!-- Users Table -->
   <div class="table-container">
-    <table *ngIf="!isLoading()">
+    <table>
       <thead>
         <tr>
           <th>User</th>
@@ -88,15 +88,5 @@
         </tr>
       </tbody>
     </table>
-
-    <!-- Loading State -->
-    <div *ngIf="isLoading()" class="p-12 text-center text-gray-500">
-      Loading users...
-    </div>
-
-    <!-- Empty State -->
-    <div *ngIf="!isLoading() && filteredUsers().length === 0" class="p-12 text-center text-gray-500">
-      No users found.
-    </div>
   </div>
 </div>

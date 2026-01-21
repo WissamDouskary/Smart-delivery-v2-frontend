@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { colis } from '../../../models/get-colis.model';
 import { colisService } from '../../../../../core/services/colis.service';
@@ -13,6 +13,10 @@ import { ApiService } from '../../../../../core/services/api.service';
 import { livreurService } from '../../../../../core/services/livreurs.service';
 import { livreurModel } from '../../../../../core/models/livreurs.model';
 import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { loadSingleColis } from '../../../../../core/state/colis/colis.actions';
+import { selectSelectedColis } from '../../../../../core/state/colis/colis.selectors';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-single-colis',
@@ -22,15 +26,17 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './single-colis.css',
 })
 export class SingleColis implements OnInit {
-  private router = inject(ActivatedRoute);
-  private colisSer = inject(colisService);
+  private route = inject(ActivatedRoute);
   private detector = inject(ChangeDetectorRef);
   private _jwtService = inject(jwtService);
-  private _apiService = inject(ApiService);
   private _livreurService = inject(livreurService);
+  private store = inject(Store);
 
-  colisId: string | null = this.router.snapshot.paramMap.get('id');
-  colis = signal<colis | null>(null);
+  colisId: string | null = this.route.snapshot.paramMap.get('id');
+
+  // selector as signal
+  colis = toSignal(this.store.select(selectSelectedColis));
+
   livreurs = signal<livreurModel[] | null>([]);
   errorMessage: string = '';
 
@@ -40,25 +46,30 @@ export class SingleColis implements OnInit {
   selectedLivreur: string = '';
   statusSelect: string = "";
 
+  constructor() {
+    effect(() => {
+      const currentColis = this.colis();
+      if (currentColis) {
+        this.getAllLivreurs();
+      }
+    });
+  }
+
   isAdmin(): boolean {
     return this._jwtService.getRole() == 'Manager';
   }
 
-  isLivreur() : boolean{
+  isLivreur(): boolean {
     return this._jwtService.getRole() == "Livreur";
   }
 
   assignLivreur(colisId: string | undefined) {
     return this._livreurService
       .assignLivreur(colisId!, this.selectedLivreur)
-      .pipe(
-        finalize(() => {
-          this.getColisInformation();
-        })
-      )
       .subscribe({
         next: () => {
           toast.success('livreur assigned successfully!');
+          this.store.dispatch(loadSingleColis({ id: this.colisId! }));
         },
         error: (err) => {
           toast.error(err.error.message);
@@ -66,31 +77,31 @@ export class SingleColis implements OnInit {
       });
   }
 
-  updateColisStatus(colisId: string | undefined){
-    console.log(this.statusSelect)
+  updateColisStatus(colisId: string | undefined) {
     this._livreurService.updateStatusByLivreur(colisId, this.statusSelect)
-    .subscribe({
-      next: () => {
-        toast.success("status updated successfully");
-        this.getColisInformation();
-      },
-      error: (err) => {
-        toast.error(err.error.message);
-      }
-    })
+      .subscribe({
+        next: () => {
+          toast.success("status updated successfully");
+          this.store.dispatch(loadSingleColis({ id: this.colisId! }));
+        },
+        error: (err) => {
+          toast.error(err.error.message);
+        }
+      })
   }
 
   getAllLivreurs() {
     return this._livreurService.getLivreurs().subscribe({
       next: (resp) => {
-        if(this.colis()?.status == "IN_STOCK"){
+        const currentColis = this.colis();
+        if (currentColis?.status == "IN_STOCK") {
           this.livreurs.set(resp.filter((liv) => liv.city.nom.includes("Maroc")));
-        }else{
-          this.livreurs.set(resp.filter((liv) => liv.city.nom.includes(this.colis()?.city.nom!)));
+        } else if (currentColis) {
+          this.livreurs.set(resp.filter((liv) => liv.city.nom.includes(currentColis.city.nom!)));
         }
       },
       error: (err) => {
-        if(this.isAdmin()){
+        if (this.isAdmin()) {
           if (err.error.message) {
             toast.error(err.error.message);
           }
@@ -99,23 +110,9 @@ export class SingleColis implements OnInit {
     });
   }
 
-  getColisInformation() {
-    this.colisSer
-      .getColisById(this.colisId)
-      .pipe()
-      .subscribe({
-        next: (res) => {
-          this.colis.set(res);
-          this.getAllLivreurs();
-        },
-        error: (err: any) => {
-          this.errorMessage = err.error.message;
-          toast.error(err.error.message);
-        },
-      });
-  }
-
   ngOnInit(): void {
-    this.getColisInformation();
+    if (this.colisId) {
+      this.store.dispatch(loadSingleColis({ id: this.colisId }));
+    }
   }
 }

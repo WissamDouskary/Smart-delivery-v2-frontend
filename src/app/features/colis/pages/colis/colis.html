@@ -27,8 +27,8 @@
           </svg>
         </span>
         <input
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearch()"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)"
           type="text"
           placeholder="Rechercher un colis..."
           class="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
@@ -60,15 +60,18 @@
   </div>
 
   <!-- Cards Grid -->
-   @if (colis().length > 0) {
+   @if (filteredColis().length > 0) {
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     
-        @for (item of colis(); track item.id) {
+        @for (item of filteredColis(); track item.id) {
           <app-card [colis]="item"></app-card>
         }
 
   </div>
   } @else {
-    <p class="text-red-500 pt-6 text-center">{{errorMessage}}</p>    
+    <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+      <p class="text-xl font-medium">Aucun colis trouvé</p>
+      <p>Essayez d'ajuster vos critères de recherche.</p>
+    </div>
   }
 </div>
